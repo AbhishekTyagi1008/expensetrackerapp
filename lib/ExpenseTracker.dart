@@ -28,7 +28,21 @@ class ExpensetrackerState extends State<ExpenseTracker> {
   ];
 
   void openExpenseAdderOverlay() {
-    showModalBottomSheet(context: context, builder: (context) => NewExpense());
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => NewExpense(onAddExpense: addExpense),
+    );
+  }
+
+  addExpense(Expense expense) {
+    print(expense);
+    setState(() {
+      registeredExpenses.add(expense);
+    });
+  }
+
+  removeExpense(Expense expense) {
+    registeredExpenses.remove(expense);
   }
 
   @override
@@ -43,7 +57,12 @@ class ExpensetrackerState extends State<ExpenseTracker> {
       body: Column(
         children: [
           Text('EXPENSE'),
-          Expanded(child: Expenselist(expenses: registeredExpenses)),
+          Expanded(
+            child: Expenselist(
+              expenses: registeredExpenses,
+              onRemoveExpense: removeExpense,
+            ),
+          ),
         ],
       ),
     );

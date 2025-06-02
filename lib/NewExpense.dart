@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myexpensetrackerapp/Model/Expense.dart';
 
 final formatter = DateFormat().add_yMd();
 
 class NewExpense extends StatefulWidget {
+  final void Function(Expense) onAddExpense;
+  NewExpense({required this.onAddExpense});
   @override
   State<NewExpense> createState() {
     return NewexpenseState();
@@ -14,19 +17,34 @@ class NewExpense extends StatefulWidget {
 class NewexpenseState extends State<NewExpense> {
   TextEditingController titleTextEditingController = TextEditingController();
   TextEditingController amountTextEditingController = TextEditingController();
-  String? selectedDate;
+  DateTime selectedDate = DateTime.now();
+  Category selectedCategory = Category.Food;
   presentDatePicker() async {
     DateTime now = DateTime.now();
     DateTime firstDate = DateTime(2025, 1, 1);
     DateTime lastDate = DateTime(2025, 12, 31);
+
     final dateSelected = await showDatePicker(
       context: context,
       firstDate: firstDate,
       lastDate: lastDate,
     );
     setState(() {
-      selectedDate = formatter.format(dateSelected!).toString();
+      selectedDate = dateSelected!;
     });
+  }
+
+  saveNewExpense() {
+    print('save');
+    //DateTime tempDate = new DateFormat("yyyy-MM-dd").parse(selectedDate!);
+    Expense expense = Expense(
+      title: titleTextEditingController.text,
+      amount: double.parse(amountTextEditingController.text),
+      date: selectedDate!,
+      category: selectedCategory,
+    );
+    widget.onAddExpense(expense);
+    Navigator.pop(context);
   }
 
   @override
@@ -56,14 +74,54 @@ class NewexpenseState extends State<NewExpense> {
               SizedBox(width: 20),
               Expanded(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(selectedDate == null ? "" : selectedDate!),
+                    Text(formatter.format(selectedDate!).toString()),
                     IconButton(
                       onPressed: presentDatePicker,
                       icon: Icon(Icons.calendar_month),
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              DropdownButton(
+                value: selectedCategory,
+                items: [
+                  DropdownMenuItem(child: Text('Food'), value: Category.Food),
+                  DropdownMenuItem(child: Text('Work'), value: Category.Work),
+                  DropdownMenuItem(
+                    child: Text('Leisure'),
+                    value: Category.Leisure,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Travel'),
+                    value: Category.Travel,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                },
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
+              SizedBox(width: 5),
+              ElevatedButton(
+                onPressed: saveNewExpense,
+                child: Text('Save Expense'),
               ),
             ],
           ),

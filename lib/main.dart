@@ -2,5 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myexpensetrackerapp/ExpenseTracker.dart';
 
 void main() {
-  runApp(MaterialApp(home: ExpenseTracker()));
+  runApp(
+    MaterialApp(debugShowCheckedModeBanner: false, home: ExpenseTracker()),
+  );
 }
