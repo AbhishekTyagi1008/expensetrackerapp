@@ -25,13 +25,14 @@ class Expenseitemcard extends StatelessWidget {
             SizedBox(height: 4),
             Row(
               children: [
-                Text(expense.amount.toString()),
+                Text('\$' + expense.amount.toString()),
                 Spacer(),
                 Row(
                   children: [
-                    Icon(Icons.play_arrow),
-                    SizedBox(width: 4),
-                    Text(expense.date.toString()),
+                    Icon(expense.getCategoryIcon()),
+                    Text(expense.category.name.toString()),
+                    SizedBox(width: 10),
+                    Text(expense.getFormattedDate()),
                   ],
                 ),
               ],
