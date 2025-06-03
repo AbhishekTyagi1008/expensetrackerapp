@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:myexpensetrackerapp/ExpenseList.dart';
 import 'package:myexpensetrackerapp/Model/Expense.dart';
 import 'package:myexpensetrackerapp/NewExpense.dart';
+import 'package:myexpensetrackerapp/SimplePieChart.dart';
 
 class ExpenseTracker extends StatefulWidget {
   @override
@@ -39,10 +40,36 @@ class ExpensetrackerState extends State<ExpenseTracker> {
     setState(() {
       registeredExpenses.add(expense);
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Expense Added'),
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   removeExpense(Expense expense) {
-    registeredExpenses.remove(expense);
+    setState(() {
+      registeredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Expense Deleted'),
+        duration: Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              registeredExpenses.add(expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,7 +83,6 @@ class ExpensetrackerState extends State<ExpenseTracker> {
       ),
       body: Column(
         children: [
-          Text('EXPENSE'),
           Expanded(
             child: Expenselist(
               expenses: registeredExpenses,

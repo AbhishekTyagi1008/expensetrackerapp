@@ -21,18 +21,27 @@ class Expenseitemcard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           children: [
-            Text(expense.title),
+            Text(expense.title, style: Theme.of(context).textTheme.titleLarge),
             SizedBox(height: 4),
             Row(
               children: [
-                Text('\$' + expense.amount.toString()),
+                Text(
+                  '\$' + expense.amount.toString(),
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
                 Spacer(),
                 Row(
                   children: [
                     Icon(expense.getCategoryIcon()),
-                    Text(expense.category.name.toString()),
+                    Text(
+                      expense.category.name.toString(),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     SizedBox(width: 10),
-                    Text(expense.getFormattedDate()),
+                    Text(
+                      expense.getFormattedDate(),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                   ],
                 ),
               ],
