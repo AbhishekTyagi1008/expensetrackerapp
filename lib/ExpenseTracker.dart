@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:myexpensetrackerapp/ExpenseList.dart';
 import 'package:myexpensetrackerapp/Model/Expense.dart';
 import 'package:myexpensetrackerapp/NewExpense.dart';
-import 'package:myexpensetrackerapp/SimplePieChart.dart';
+import 'package:myexpensetrackerapp/SimpleBarChart.dart';
 
 class ExpenseTracker extends StatefulWidget {
   @override
@@ -74,6 +74,9 @@ class ExpensetrackerState extends State<ExpenseTracker> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    print(screenWidth);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('EXPENSE TRACKER'),
@@ -81,16 +84,38 @@ class ExpensetrackerState extends State<ExpenseTracker> {
           IconButton(onPressed: openExpenseAdderOverlay, icon: Icon(Icons.add)),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Expenselist(
-              expenses: registeredExpenses,
-              onRemoveExpense: removeExpense,
-            ),
-          ),
-        ],
-      ),
+      body:
+          screenWidth < 500
+              ? Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SimpleBarChart(expenses: registeredExpenses),
+                  ),
+                  Expanded(
+                    child: Expenselist(
+                      expenses: registeredExpenses,
+                      onRemoveExpense: removeExpense,
+                    ),
+                  ),
+                ],
+              )
+              : Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SimpleBarChart(expenses: registeredExpenses),
+                    ),
+                  ),
+                  Expanded(
+                    child: Expenselist(
+                      expenses: registeredExpenses,
+                      onRemoveExpense: removeExpense,
+                    ),
+                  ),
+                ],
+              ),
     );
   }
 }
